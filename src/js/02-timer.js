@@ -10,6 +10,8 @@ const ref = {
 console.log(ref.btnStart);
 ref.btnStart.disabled = true;
 
+let selectedDateValue = null;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -17,12 +19,11 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
-    const selectedDateValue = selectedDates[0].getTime();
-    console.log(selectedDateValue);
+
+    selectedDateValue = selectedDates[0].getTime();
 
     const date = new Date();
     const todayDateValue = date.getTime();
-    console.log(todayDateValue);
 
     console.log(date);
 
@@ -30,19 +31,26 @@ const options = {
 
     if (selectedDateValue > todayDateValue) {
       ref.btnStart.disabled = false;
-      const timerBack = selectedDateValue - todayDateValue;
-      // console.log(timerBack);
-
-      return console.log(convertMs(timerBack));
     } else {
       ref.btnStart.disabled = true;
       alert('Please choose a date in the future');
     }
   },
 };
-console.log(options.onClose);
-let time = options.onClose;
+
 flatpickr('input#datetime-picker', options);
+
+const timer = {
+  start() {
+    setInterval(() => {
+      const currentTime = Date.now();
+
+      console.log(convertMs(selectedDateValue - currentTime));
+    }, 1000);
+  },
+};
+
+timer.start();
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
